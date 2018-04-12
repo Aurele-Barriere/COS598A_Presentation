@@ -23,6 +23,9 @@
 \setbeamercolor{example text}{fg=mDarkGreen}
 \setbeamercolor{title separator}{fg=purple,bg=mBlack}
 
+\definecolor{spec}{HTML}{6F1616}
+\definecolor{prog}{HTML}{106235}
+
 \def\outline{
   \begin{frame}[plain,noframenumbering]
     \frametitle{Outline}
@@ -32,13 +35,13 @@
 
 
 \begin{document}
-\title[shorttitle]{??Title??}
+\title[QCHL]{Quantitative Cartesian Hoare Logic in Verification}
 
 \author[Aur\`ele Barri\`ere]{Aur\`ele Barri\`ere}
 
 \date{\textit{ENS Rennes}
   \vfill
-  \textbf{??DATE??}}
+  \textbf{April 16, 2018}}
 
 \def\outline{
   \begin{frame}[plain,noframenumbering]
@@ -57,12 +60,152 @@
 
 %% \metroset{sectionpage=progressbar}
 
-\begin{frame}{Frame title}
-  lorem ipsum
+\def\spec#1{{\color{spec}\textbf{#1}}}
+\def\prog#1{{\color{prog}\textbf{#1}}}
+
+\section{Cartesian Hoare Logic}
+\begin{frame}{Cartesian Hoare Logic for Verifying $k$-Safety Properties}
+  \begin{center}
+    Marcelo Sousa\qquad Isil Dillig\\
+    PLDI 2016
+  \end{center}
+  \vfill
+  \begin{exampleblock}{Contribution}
+    \begin{itemize}
+    \item Cartesian Hoare Logic: \textbf{sound} and \textbf{complete}
+    \item Automated tool for verification: \textsc{Descartes}
+    \item Verification of realistic examples. \textbf{bugs found}
+    \end{itemize}
+  \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Frame 2 title}
-  lorem ipsum
+\begin{frame}{Reminder: Hoare Logic}
+  \begin{block}{Hoare Logic}
+    \begin{itemize}
+    \item \spec{Specification} language
+    \item \prog{Program} language
+    \item Logic rules to prove \textbf{Hoare Triples}
+    \end{itemize}
+  \end{block}
+  \vfill
+  \begin{block}{Hoare Triple}
+    $$\{ \spec{$\phi$} \}\quad \prog{S} \quad\{ \spec{$\psi$} \}$$
+    \begin{center}
+      Precondition\quad Program\quad Postcondition
+    \end{center}
+  \end{block}
+  \vfill
+  \begin{exampleblock}{Hoare Triple's meaning}
+    Any terminating execution of \prog{S} from a state where \spec{$\phi$} holds
+    ends on a state where \spec{$\psi$} holds.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Hoare Logic's rules}
+  TODO
+\end{frame}
+\begin{frame}{Hoare Logic Properties}
+
+  \begin{exampleblock}{Properties}
+    \begin{itemize}
+    \item Expressive
+    \item Not decidable
+    \item Well-studied
+    \item Many extensions
+    \end{itemize}
+  \end{exampleblock}
+
+\end{frame}
+
+\begin{frame}{$k$-Safety Properties}
+  \begin{alertblock}{Motivation}
+    Some correctness properties require reasonning about multiple program executions and their relationship.\\
+    These are \textbf{$k$-Safety Properties} ($k$ : nb of executions).\\
+    Introduced by Clarkson and Schneider in \textbf{Hyperproperties} (CSF2008).\\
+    Hoare Logic only reasons about \textit{any single} execution of a program.
+  \end{alertblock}
+  \vfill
+  \begin{exampleblock}{Example: 2-safety hyperproperty}
+    Determinism: $\forall \prog{S},x,y,\quad\prog{S}(x) = \prog{S}(y)$.
+  \end{exampleblock}
+\end{frame}
+
+\def\comp{\prog{\texttt{compare}}}
+
+\begin{frame}{Comparator Example}
+
+  \comp\ Java methode.
+  \begin{enumerate}
+  \item $\forall x,y, sgn(\comp(x,y)) = -sgn(\comp(y,x))$
+  \item $\forall x,y,z, (\comp(x,y)>0\wedge \comp(y,z)>0)\rightarrow \comp(x,z)>0$
+  \item $\forall x,y,z, (\comp(x,y)=0\rightarrow (sgn(\comp(x,z))=sgn(\comp(y,z))))$
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Buggy Comparator}
+  TODO
+  from StackOverflow
+\end{frame}
+
+\begin{frame}{Cartesian Hoare Logic}
+
+  \begin{block}{Cartesian Hoare Triple}
+    $$||\spec{$\phi$}||\quad\prog{S}\quad||\spec{$\psi$}||$$
+  \end{block}
+  \vfill
+  \begin{block}{Example}
+    $$||\spec{$y_1=x_2\wedge x_1=x_3\wedge y_2=y_3$}||$$
+    $$\quad\comp(x,y)$$
+    $$||\spec{$ret_1 > 0\wedge ret_2>0 \rightarrow ret_3 >0$}||$$
+  \end{block}
+  \vfill
+  \begin{block}{Meaning}
+    Forall $(\pi_1,\dots,\pi_k)$, where $\pi_i$' inputs are $(x_i,y_i)$, $\pi_i$'s output is $ret_i$, and the set of inputs satisfy the precondition, the postcondition holds.
+  \end{block}
+  
+\end{frame}
+
+\begin{frame}{Program Language}
+
+  TODO
+\end{frame}
+
+\begin{frame}{Semantics}
+  
+  \begin{block}{Operational semantics}
+    $$\sigma,e\Downarrow \texttt{int}\quad\quad\sigma,\prog{S}\Downarrow \sigma'$$
+  \end{block}
+  \vfill
+  \begin{block}{Entailment}
+      $$\sigma\models\varphi\quad iff\quad \sigma,\varphi\Downarrow \texttt{true}$$
+  \end{block}
+  \vfill
+  \begin{block}{Equivalence}
+    $$\prog{S$_1$}\equiv\prog{S$_2$} \text{ if}\quad\forall \sigma,\sigma', \quad \sigma,\prog{S$_1$}\Downarrow\sigma'\ iff\  \sigma,\prog{S$_2$}\Downarrow\sigma'$$
+  \end{block}
+  \vfill
+  \begin{block}{Valid Hoare Triple}
+    $$\{ \spec{$\phi$} \}\ \prog{S}\ \{ \spec{$\psi$} \}\text{ valid } iff\ \forall(\sigma,\sigma')$$
+    $$\text{if }\sigma\models\phi\text{ and } \sigma,\prog{S}\Downarrow\sigma'\text{ then }\sigma'\models\psi$$
+  \end{block}
+    
+  
+\end{frame}
+
+\begin{frame}{Valid Cartesian Horae Logic Triple}
+  \begin{block}{Validity}
+  \begin{center}
+    $||\spec{$\phi$}||\quad\prog{S}\quad||\spec{$\psi$}||$ valid $\ iff\ $\\
+    $\forall \{(\sigma_1,\sigma_1'),\dots,(\sigma_k,\sigma_k')\}$ such that
+    $\biguplus_{i}\ \sigma_i\models\spec{$\phi$}$ and $\forall i, \sigma_i,\prog{S}\Downarrow\sigma_i'$,\\
+     we also have $\biguplus_{i}\ \sigma_i'\models\spec{$\psi$}$
+
+  \end{center}
+  \end{block}
+  \vfill
+  \begin{block}{Counter-example}
+    $k$ executions of \prog{S}.
+  \end{block}
 \end{frame}
 
 \end{document}
