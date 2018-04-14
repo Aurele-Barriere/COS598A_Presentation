@@ -102,7 +102,9 @@
 \end{frame}
 
 \begin{frame}{Hoare Logic's rules}
-  TODO
+  \begin{center}
+    \includegraphics[scale=0.4]{img_sousa/hoare.jpg}
+  \end{center}
 \end{frame}
 \begin{frame}{Hoare Logic Properties}
 
@@ -143,8 +145,9 @@
 \end{frame}
 
 \begin{frame}{Buggy Comparator}
-  TODO
-  from StackOverflow
+  \begin{center}
+    \includegraphics[scale=0.4]{img_sousa/buggycomp.png}
+  \end{center}
 \end{frame}
 
 \begin{frame}{Cartesian Hoare Logic}
@@ -166,8 +169,9 @@
 \end{frame}
 
 \begin{frame}{Program Language}
-
-  TODO
+  \begin{center}
+    \includegraphics[scale=0.3]{img_sousa/proglang.png}
+  \end{center}
 \end{frame}
 
 \begin{frame}{Semantics}
@@ -206,6 +210,129 @@
   \begin{block}{Counter-example}
     $k$ executions of \prog{S}.
   \end{block}
+\end{frame}
+
+\begin{frame}{Cartesian Hoare Triple Examples}
+    \begin{center}
+    \includegraphics[scale=0.3]{img_sousa/fig4.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{$k$-Safety properties Examples}
+    \begin{center}
+    \includegraphics[scale=0.25]{img_sousa/fig3.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Program product}
+  \begin{center}
+    \includegraphics[scale=0.2]{img_sousa/def5.png}
+  \end{center}
+  \vfill
+  \begin{exampleblock}{Meaning}
+    The set of all programs semantically equivalent to the simultaneous execution of \prog{S$_1$} and \prog{S$_2$}
+  \end{exampleblock}
+  \vfill
+  \begin{center}
+    \includegraphics[scale=0.2]{img_sousa/def6.png}
+  \end{center}
+  
+\end{frame}
+
+\begin{frame}{Core Cartesian Hoare Logic Rules}
+  \begin{center}
+    \includegraphics[scale=0.28]{img_sousa/rules1.png}
+    \includegraphics[scale=0.28]{img_sousa/rules2.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Cartesian Loop Logic}
+    \begin{center}
+    \includegraphics[scale=0.36]{img_sousa/fig6.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Theorems}
+  \begin{exampleblock}{Soundness}
+    If $\vdash ||\spec{$\phi$}||\ \prog{S}\ ||\spec{$\psi$}||$ then $\models ||\spec{$\phi$}||\ \prog{S}\ ||\spec{$\psi$}||$
+  \end{exampleblock}
+  \vfill
+  \begin{exampleblock}{Relative Completeness}
+    If we can decide the validity of a standard Hoare Triple, then\\
+    if $\models ||\spec{$\phi$}||\ \prog{S}\ ||\spec{$\psi$}||$ then $\vdash ||\spec{$\phi$}||\ \prog{S}\ ||\spec{$\psi$}||$
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Verification Algorithm}
+  \begin{itemize}
+  \item Use (Havoc), (Consq) and (If) as much as possible.
+  \item Call to a Standard Hoare Logic prover.
+  \item Step through matching loops using Cartesian Loop Logic.
+  \item External procedure to find loop invariants.
+  \end{itemize}
+  \vfill
+  \begin{exampleblock}{Theorem}
+    The algorithm terminates for any Precondition, Postcondition and Program.
+  \end{exampleblock}
+  \vfill
+  \begin{block}{Implementation}
+    \textsc{Descartes} in Haskell. Uses Z3 for formula satisfiability.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Evaluation: StackOverflow}
+    \begin{center}
+    \includegraphics[scale=0.3]{img_sousa/91.png}
+    \includegraphics[scale=0.3]{img_sousa/92.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Evaluation: StackOverflow}
+  \begin{itemize}
+  \item No false alarms.
+  \item Fast (1.21 seconds on average).
+  \item Z3 gives a counter-example for invalid properties.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Evaluation: Github Projects}
+  \begin{itemize}
+  \item Apache Storm, ligGDX, Android, Netty. 2KLOC.
+  \item  28 comparators. 34 equality methods.
+  \item On average 9.14 seconds per method. (Maximum: 55.27sec)
+  \item 5 false alarms.
+  \item 5 real bugs discovered.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Related Works}
+  \begin{block}{Self-Composition}
+    Generates $k$ copies of the program sequentially. Verify a standard Hore Logic Triple. 20 times slower.
+  \end{block}
+  \vfill
+  \begin{block}{Product Programs}
+    No way to construct such product programs.
+    Approximately 20 times slower.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Conclusion}
+  \begin{itemize}
+  \item New approach for automated verification of $k$-safety properties.
+  \item Uses the similarity of program copies.
+  \item Algorithm implemented. Bugs found.
+  \end{itemize}
+\end{frame}
+
+\section{Quantitative Cartesian Hoare Logic}
+\begin{frame}{Precise Detection of Side-Channel Vulnerabilities using Quantitative Cartesian Hoare Logic}
+  \begin{center}
+    Jia Chen\qquad Yu Feng \qquad Isil Dillig\\
+    PLDI 2016
+  \end{center}
+  \vfill
+  \begin{exampleblock}{Contribution}
+  \end{exampleblock}
 \end{frame}
 
 \end{document}
