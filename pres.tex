@@ -35,7 +35,7 @@
 
 
 \begin{document}
-\title[QCHL]{Quantitative Cartesian Hoare Logic in Verification}
+\title[QCHL]{Precise Detection of Side-Channel Vulnerabilities using Quantitative Cartesian Hoare Logic}
 
 \author[Aur\`ele Barri\`ere]{Aur\`ele Barri\`ere}
 
@@ -332,7 +332,172 @@
   \end{center}
   \vfill
   \begin{exampleblock}{Contribution}
+    \begin{itemize}
+    \item $\epsilon$-bounded non-interference.
+    \item Quantitative Cartesian Hoare Logic.
+    \item Implementation: \textsc{Themis}. Bugs found.
+    \end{itemize}
   \end{exampleblock}
 \end{frame}
+
+\begin{frame}{Side channel attacks}
+  \begin{itemize}
+  \item Timing side channels
+  \item Compression side channels
+  \end{itemize}
+  \vfill
+  \begin{alertblock}{Vulnerabilities}
+    Resource usage of the program (time, space, power, etc.) should not vary with respect to the secret.
+  \end{alertblock}
+  \vfill
+  \begin{exampleblock}{$\epsilon$-bounded non interference}
+    Resource usage does not vary by more than $\epsilon$.\\
+    2-safety property.
+  \end{exampleblock}
+  
+\end{frame}
+
+\begin{frame}{Timing attack Example}
+  \begin{center}
+    \includegraphics[scale=0.38]{img_chen/1.png}\\
+    \includegraphics[scale=0.38]{img_chen/2.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Verification approach}
+  \begin{enumerate}
+  \item User specifies a value for $\epsilon$, type of attack and secret.
+  \item \textsc{Themis} uses Taint Analysis to over-estimate the functions in which there can be a vulnerability.
+  \item \textsc{Themis} uses Quantitative Cartesian Hoare Logic to find vulnerabilities.
+  \item User changes the value of $\epsilon$. The usage difference can be proportional to the secret.
+  \item User can try to repair the program. Run \textsc{Themis} on the repaired program
+  \end{enumerate}
+  \vfill
+  \begin{alertblock}{Threat Model}
+    Finds vulnerabilities only at the software level. Side channels at the microarchitecture level (cache contention, branch prediction) can't be found with this approach.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Bounded non-interference}
+  $P$ program. $\overrightarrow{a}$ input. $R_p(\overrightarrow{a})$ resource usage.
+  \vfill
+  \begin{block}{Non-interference}
+    \begin{center}
+      \includegraphics[scale=0.3]{img_chen/def1.png}
+    \end{center}
+  \end{block}
+  \vfill
+  \begin{block}{$\sigma$-bounded non-interference}
+    \begin{center}
+      \includegraphics[scale=0.3]{img_chen/def2.png}
+    \end{center}
+  \end{block}    
+\end{frame}
+
+\begin{frame}{Quantitative Cartesian Hoare Logic - Program Language}
+  \begin{center}
+    \includegraphics[scale=0.25]{img_chen/3.png}\\
+    \includegraphics[scale=0.3]{img_chen/41.png}
+    \includegraphics[scale=0.3]{img_chen/42.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Quantitative Cartesian Hoare Logic - Deterministic Proof rules}
+  $\Sigma$: Taint environment.
+\begin{center}
+    \includegraphics[scale=0.3]{img_chen/51.png}
+    \includegraphics[scale=0.3]{img_chen/52.png}
+\end{center}
+\end{frame}
+
+\begin{frame}{Synchronizing loops}
+  $I$: relational loop invariant.
+  \vfill
+  \begin{center}
+    \includegraphics[scale=0.4]{img_chen/6.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Finding Relational Loop Invariants: Guess and Check}
+  \begin{center}
+    \includegraphics[scale=0.35]{img_chen/algo1.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Implementation}
+  \begin{center}
+    \includegraphics[scale=0.35]{img_chen/7.png}
+  \end{center}
+  \textbf{Pointer Analysis:} Creates callgrap, identify all variables that may alias.\\
+  \textbf{Taint Analysis:} Find hotspots, synchronized loops.\\
+  \textbf{Resource consumption instrumentation:} Adds the \texttt{consume} statements.
+\end{frame}
+
+\begin{frame}{False Alarm Example}
+  \begin{center}
+    \includegraphics[scale=0.4]{img_chen/foobar.png}
+  \end{center}
+  \vfill
+  No Side-Channel Vulnerbility here, but both functions will be seen as unsafe hotspots.
+\end{frame}
+
+\begin{frame}{Dependencies}
+  \begin{itemize}
+  \item \textbf{Z3:} SMT solver. Finds counterexamples.
+  \item \textbf{FlowDroid:} Taint analyzer.
+  \item \textbf{Apron:} numerical abstract domain library. Infer standard loop invariants.
+  \item \textbf{Soot:} Framework for Java analysis. Transforms program syntax.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Evaluation: Comparison Against \textsc{Blazer}}
+  \begin{block}{\textsc{Blazer}}
+    Static analyzer for timing attacks. Standard non-interference.
+  \end{block}
+  \vfill
+\begin{center}
+    \includegraphics[scale=0.28]{img_chen/8.png}
+  \end{center}
+  \vfill
+  \textsc{Themis} median: 7.73 seconds. \textsc{Blazer} median: 376.92 seconds.
+\end{frame}
+
+\begin{frame}{Other Benchmarks with known vulnerabilities (and repaired versions)}
+ \begin{center}
+    \includegraphics[scale=0.36]{img_chen/9.png}
+  \end{center}
+ Average: 8.81 seconds.
+\end{frame}
+
+\begin{frame}{Zero-Days Vulnerabilities}
+  \begin{center}
+    \includegraphics[scale=0.4]{img_chen/10.png}
+  \end{center}
+  6 out of 7 already fixed. One false alarm.
+  \begin{center}
+    \includegraphics[scale=0.4]{img_chen/11.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Conclusion}
+  \begin{alertblock}{Limitations}
+  \begin{itemize}
+  \item False Alarms.
+  \item No Recursive functions.
+  \item Some JAVA features are missing.
+  \item Only software vulnerabilities.
+  \end{itemize}
+  \end{alertblock}
+  \vfill
+  \begin{exampleblock}{Results}
+    \begin{itemize}
+    \item Better definition of non-interference.
+    \item New sound Hoare Logic and verification algorithm.
+    \item Implementation of \textsc{Themis}. Compares favorably against \textsc{Blazer}
+    \item New bugs found.
+    \end{itemize}
+  \end{exampleblock}
+\end{frame}
+
 
 \end{document}
