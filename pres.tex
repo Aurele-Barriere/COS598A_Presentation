@@ -289,7 +289,7 @@
 
 \begin{frame}{Evaluation: StackOverflow}
   \begin{itemize}
-  \item No false alarms.
+  \item No false positives.
   \item Fast (1.21 seconds on average).
   \item Z3 gives a counter-example for invalid properties.
   \end{itemize}
@@ -300,7 +300,7 @@
   \item Apache Storm, ligGDX, Android, Netty. 2KLOC.
   \item  28 comparators. 34 equality methods.
   \item On average 9.14 seconds per method. (Maximum: 55.27sec)
-  \item 5 false alarms.
+  \item 5 false positives.
   \item 5 real bugs discovered.
   \end{itemize}
 \end{frame}
@@ -433,7 +433,7 @@
   \textbf{Resource consumption instrumentation:} Adds the \texttt{consume} statements.
 \end{frame}
 
-\begin{frame}{False Alarm Example}
+\begin{frame}{False Positive Example}
   \begin{center}
     \includegraphics[scale=0.4]{img_chen/foobar.png}
   \end{center}
@@ -473,7 +473,7 @@
   \begin{center}
     \includegraphics[scale=0.4]{img_chen/10.png}
   \end{center}
-  6 out of 7 already fixed. One false alarm.
+  6 out of 7 already fixed. One false positive.
   \begin{center}
     \includegraphics[scale=0.4]{img_chen/11.png}
   \end{center}
@@ -482,7 +482,7 @@
 \begin{frame}{Conclusion}
   \begin{alertblock}{Limitations}
   \begin{itemize}
-  \item False Alarms.
+  \item False Positives.
   \item No Recursive functions.
   \item Some JAVA features are missing.
   \item Only software vulnerabilities.
